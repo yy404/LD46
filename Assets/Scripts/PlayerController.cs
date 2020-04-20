@@ -71,21 +71,32 @@ public class PlayerController : MonoBehaviour
 
     void ConstrainPlayerPosition()
     {
+        bool isConstrained = false;
+
         if (transform.position.z < 0)
         {
             transform.position = new Vector3(transform.position.x, transform.position.y, 0);
+            isConstrained = true;
         }
         if (transform.position.z > zBound)
         {
             transform.position = new Vector3(transform.position.x, transform.position.y, zBound);
+            isConstrained = true;
         }
         if (transform.position.x < 0)
         {
             transform.position = new Vector3(0, transform.position.y, transform.position.z);
+            isConstrained = true;
         }
         if (transform.position.x > xBound)
         {
             transform.position = new Vector3(xBound, transform.position.y, transform.position.z);
+            isConstrained = true;
+        }
+
+        if (isConstrained == true)
+        {
+            playerRb.velocity = new Vector3 (0, 0, 0);
         }
     }
 
