@@ -47,6 +47,7 @@ public class MoveDown : MonoBehaviour
             Destroy(other.gameObject);
             Destroy(gameObject);
             TheSpawnManagerInstance.updateEnemySum(-1);
+            TheSpawnManagerInstance.addScore();
 
             if (xPos > 0)
             {
@@ -62,6 +63,7 @@ public class MoveDown : MonoBehaviour
                         TheSpawnManagerInstance.updateGroundInfo((int)zPos, (int)xPos - 1, null);
                         Destroy(thisObject);
                         TheSpawnManagerInstance.updateEnemySum(-1);
+                        TheSpawnManagerInstance.addScore();
                     }
                 }
             }
@@ -79,6 +81,7 @@ public class MoveDown : MonoBehaviour
                       TheSpawnManagerInstance.updateGroundInfo((int)zPos, (int)xPos + 1, null);
                       Destroy(thisObject);
                       TheSpawnManagerInstance.updateEnemySum(-1);
+                      TheSpawnManagerInstance.addScore();
                   }
               }
             }
@@ -96,6 +99,7 @@ public class MoveDown : MonoBehaviour
                       TheSpawnManagerInstance.updateGroundInfo((int)zPos - 1, (int)xPos, null);
                       Destroy(thisObject);
                       TheSpawnManagerInstance.updateEnemySum(-1);
+                      TheSpawnManagerInstance.addScore();
                   }
               }
             }
@@ -113,6 +117,7 @@ public class MoveDown : MonoBehaviour
                       TheSpawnManagerInstance.updateGroundInfo((int)zPos + 1, (int)xPos, null);
                       Destroy(thisObject);
                       TheSpawnManagerInstance.updateEnemySum(-1);
+                      TheSpawnManagerInstance.addScore();
                   }
               }
             }

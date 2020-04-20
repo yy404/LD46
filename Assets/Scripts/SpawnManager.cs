@@ -29,10 +29,12 @@ public class SpawnManager : MonoBehaviour
     public TextMeshProUGUI gameOverText;
     public Button restartButton;
     public TextMeshProUGUI timerText;
+    public TextMeshProUGUI scoreText;
 
     private float timer;
     private bool isGameActive;
     private int minRatio;
+    private int score;
 
     private AudioPlayer myAudioPlayer;
 
@@ -64,8 +66,9 @@ public class SpawnManager : MonoBehaviour
             {
                 timer += Time.deltaTime;
             }
-            timerText.text = "Timer: " + Mathf.Round(timer * 1.0f) * 1.0f + " s";
-            ratioText.text = "Healthy Bar: " + (100 - enemySum) + "%" + " > " + minRatio + "%";
+            scoreText.text = "Score: " + score;
+            timerText.text = "Time: " + Mathf.Round(timer * 1.0f) * 1.0f + " s";
+            ratioText.text = "Health: " + (100 - enemySum) + "%" + " > " + minRatio + "%";
         }
 
     }
@@ -92,7 +95,8 @@ public class SpawnManager : MonoBehaviour
                     break;
                 }
             }
-            // print("Try random again");
+
+            // Debug.Log("Try random again");
             randomX = Random.Range(0, 20);
             randomZ = Random.Range(0, 5);
         }
@@ -164,11 +168,14 @@ public class SpawnManager : MonoBehaviour
         // InvokeRepeating("SpawnPowerup", startDelay, powerupSpawnTime);
         Invoke("SpawnPowerup", startDelay);
 
+        score = 0;
+        scoreText.text = "Score: " + score;
+
         timer = 0.0f;
-        timerText.text = "Timer: " + timer + " s";
+        timerText.text = "Time: " + timer + " s";
 
         minRatio = ratioInput;
-        ratioText.text = "Healthy Bar: " + (100 - enemySum) + "%" + " > " + minRatio + "%";
+        ratioText.text = "Health: " + (100 - enemySum) + "%" + " > " + minRatio + "%";
 
         isGameActive = true;
         titleScreen.gameObject.SetActive(false);
@@ -176,6 +183,11 @@ public class SpawnManager : MonoBehaviour
         myAudioPlayer.playSoundOpen();
 
         restartButton.gameObject.SetActive(true);
+    }
+
+    public void addScore()
+    {
+        score += 1;
     }
 
     // void Release()
