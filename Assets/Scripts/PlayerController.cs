@@ -48,25 +48,11 @@ public class PlayerController : MonoBehaviour
 
     void MovePlayer()
     {
-        float xDist = 0.0f;
-        float zDist = 0.0f;
-        if (Input.GetKey(KeyCode.A) && transform.position.x > 0)
-        {
-            xDist -= speed * Time.deltaTime;
-        }
-        if (Input.GetKey(KeyCode.S) && transform.position.z > 0)
-        {
-            zDist -= speed * Time.deltaTime;
-        }
-        if (Input.GetKey(KeyCode.D) && transform.position.x < xBound)
-        {
-            xDist += speed * Time.deltaTime;
-        }
-        if (Input.GetKey(KeyCode.W) && transform.position.z < zBound)
-        {
-            zDist += speed * Time.deltaTime;
-        }
-        transform.Translate(xDist, 0, zDist);
+        float horizontalInput = Input.GetAxisRaw("Horizontal");
+        float verticalInput = Input.GetAxisRaw("Vertical");
+
+        Vector3 movement = new Vector3 (horizontalInput, 0, verticalInput);
+        transform.Translate(movement * speed * Time.deltaTime);
     }
 
     void ConstrainPlayerPosition()
