@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         MovePlayer();
-        MovePlayerByForce();
+        // MovePlayerByForce();
         ConstrainPlayerPosition();
         Release();
     }
@@ -39,6 +39,7 @@ public class PlayerController : MonoBehaviour
             // playerRb.AddForce(Vector3.forward * force * verticalInput);
             // playerRb.AddForce(Vector3.right * force * horizontalInput);
             playerRb.velocity = new Vector3 (horizontalInput * speed, playerRb.velocity.y, verticalInput * speed);
+            playerRb.velocity =  Vector3.ClampMagnitude(playerRb.velocity, speed);
         }
         else
         {
