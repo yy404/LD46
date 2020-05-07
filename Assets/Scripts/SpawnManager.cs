@@ -130,6 +130,15 @@ public class SpawnManager : MonoBehaviour
         Invoke("SpawnPowerup", powerupSpawnTime);
     }
 
+    public void refreshSpawnPowerup()
+    {
+        if (IsInvoking("SpawnPowerup"))
+        {
+            CancelInvoke("SpawnPowerup");
+            SpawnPowerup();
+        }
+    }
+
     void initGroundInfo()
     {
         for (int i = 0; i < 5; i++)

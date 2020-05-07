@@ -48,6 +48,7 @@ public class MoveDown : MonoBehaviour
             Destroy(gameObject);
             TheSpawnManagerInstance.updateEnemySum(-1);
             TheSpawnManagerInstance.addScore();
+            TheSpawnManagerInstance.refreshSpawnPowerup();
 
             if (xPos > 0)
             {
