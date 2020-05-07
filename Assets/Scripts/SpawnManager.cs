@@ -35,8 +35,11 @@ public class SpawnManager : MonoBehaviour
     private bool isGameActive;
     private int minRatio;
     private int score;
+    private float vitalityDuration = 10.0f;
+    private float vitalityTimer = 0.0f;
 
     private AudioPlayer myAudioPlayer;
+    private Renderer rend;
 
 
     // Start is called before the first frame update
@@ -45,6 +48,8 @@ public class SpawnManager : MonoBehaviour
         GameObject AudioPlayerObject = GameObject.Find("Audio Player");
         myAudioPlayer = AudioPlayerObject.GetComponent("AudioPlayer") as AudioPlayer;
 
+        GameObject theGroundObject = GameObject.Find("Ground");
+        rend = theGroundObject.GetComponent<Renderer>();
     }
 
     // Update is called once per frame
@@ -52,7 +57,7 @@ public class SpawnManager : MonoBehaviour
     {
         if (isGameActive)
         {
-            if (100 - enemySum <= minRatio)
+            if ((100 - enemySum <= minRatio) || (vitalityTimer > vitalityDuration))
             {
                 gameOverText.gameObject.SetActive(true);
                 // Time.timeScale = 0;
@@ -65,10 +70,13 @@ public class SpawnManager : MonoBehaviour
             else
             {
                 timer += Time.deltaTime;
+                vitalityTimer += Time.deltaTime;
+                rend.material.color = Color.Lerp(Color.red, Color.white, vitalityTimer/vitalityDuration);
             }
             scoreText.text = "Score: " + score;
-            timerText.text = "Time: " + Mathf.Round(timer * 1.0f) * 1.0f + " s";
-            ratioText.text = "Health: " + (100 - enemySum) + "%" + " > " + minRatio + "%";
+            timerText.text = "Time: " + Mathf.FloorToInt(timer) + " s";
+            ratioText.text = "Health: " + (100 - enemySum) + "%" + " > " + minRatio + "%"
+            + "\n" + "Vitality: " + (10 - Mathf.FloorToInt(vitalityTimer));
         }
 
     }
@@ -183,6 +191,8 @@ public class SpawnManager : MonoBehaviour
         Invoke("decEnemySpawnTime", startDelay + 120.0f);
         Invoke("decEnemySpawnTime", startDelay + 150.0f);
 
+        vitalityTimer = 0.0f;
+
         score = 0;
         scoreText.text = "Score: " + score;
 
@@ -190,7 +200,8 @@ public class SpawnManager : MonoBehaviour
         timerText.text = "Time: " + timer + " s";
 
         minRatio = ratioInput;
-        ratioText.text = "Health: " + (100 - enemySum) + "%" + " > " + minRatio + "%";
+        ratioText.text = "Health: " + (100 - enemySum) + "%" + " > " + minRatio + "%"
+        + "\n" + "Vitality: " + (10 - Mathf.FloorToInt(vitalityTimer));
 
         isGameActive = true;
         titleScreen.gameObject.SetActive(false);
@@ -213,6 +224,16 @@ public class SpawnManager : MonoBehaviour
           CancelInvoke("SpawnRandomEnemy");
           InvokeRepeating("SpawnRandomEnemy", enemySpawnTime, enemySpawnTime);
         }
+    }
+
+    public void resetVitalityTimer()
+    {
+        vitalityTimer = 0.0f;
+    }
+
+    public bool checkGameActive()
+    {
+        return isGameActive;
     }
     // void Release()
     // {

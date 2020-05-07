@@ -173,6 +173,11 @@ public class PlayerController : MonoBehaviour
                         TheSpawnManagerInstance.updateGroundInfo((int)zPos, (int)xPos, powerup);
 
                         myAudioPlayer.playSoundPut();
+
+                        if (TheSpawnManagerInstance.checkGameActive())
+                        {
+                            TheSpawnManagerInstance.resetVitalityTimer();
+                        }
                     }
                     else
                     {
