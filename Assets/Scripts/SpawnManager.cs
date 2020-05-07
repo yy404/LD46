@@ -19,7 +19,7 @@ public class SpawnManager : MonoBehaviour
     private float ySpawn = 0.5f;
 
     private float powerupSpawnTime = 2.0f;
-    private float enemySpawnTime = 1.0f;
+    private float enemySpawnTime = 2.0f;
     private float startDelay = 1.0f;
 
     private GameObject[,] groundInfo = new GameObject[5,20];
@@ -177,6 +177,12 @@ public class SpawnManager : MonoBehaviour
         // InvokeRepeating("SpawnPowerup", startDelay, powerupSpawnTime);
         Invoke("SpawnPowerup", startDelay);
 
+        Invoke("decEnemySpawnTime", startDelay + 30.0f);
+        Invoke("decEnemySpawnTime", startDelay + 60.0f);
+        Invoke("decEnemySpawnTime", startDelay + 90.0f);
+        Invoke("decEnemySpawnTime", startDelay + 120.0f);
+        Invoke("decEnemySpawnTime", startDelay + 150.0f);
+
         score = 0;
         scoreText.text = "Score: " + score;
 
@@ -199,6 +205,15 @@ public class SpawnManager : MonoBehaviour
         score += 1;
     }
 
+    private void decEnemySpawnTime()
+    {
+        if (enemySpawnTime > 0.5f)
+        {
+          enemySpawnTime *= 0.8f;
+          CancelInvoke("SpawnRandomEnemy");
+          InvokeRepeating("SpawnRandomEnemy", enemySpawnTime, enemySpawnTime);
+        }
+    }
     // void Release()
     // {
     //     if (Input.GetKeyDown("space"))
