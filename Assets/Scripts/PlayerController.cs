@@ -27,6 +27,7 @@ public class PlayerController : MonoBehaviour
         // MovePlayerByForce();
         ConstrainPlayerPosition();
         Release();
+        playerRb.velocity = Vector3.zero;
     }
 
     void MovePlayerByForce()
