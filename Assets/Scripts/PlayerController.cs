@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     private float xBound = 200;
     private Rigidbody playerRb;
     private AudioPlayer myAudioPlayer;
+    public ParticleSystem teleportParticle;
 
     // Start is called before the first frame update
     void Start()
@@ -173,6 +174,10 @@ public class PlayerController : MonoBehaviour
                         TheSpawnManagerInstance.updateGroundInfo((int)zPos, (int)xPos, powerup);
 
                         myAudioPlayer.playSoundPut();
+
+                        ParticleSystem teleParticle1 = Instantiate(teleportParticle, transform.position, teleportParticle.gameObject.transform.rotation);
+                        transform.position = new Vector3(0, transform.position.y, 0);
+                        ParticleSystem teleParticle2 = Instantiate(teleportParticle, transform.position, teleportParticle.gameObject.transform.rotation);
 
                         if (TheSpawnManagerInstance.checkGameActive())
                         {

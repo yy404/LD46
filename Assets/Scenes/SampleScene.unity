@@ -1680,6 +1680,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11e307c2b6eb247259f6a61fe2705443, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  teleportParticle: {fileID: 6728434502670758968, guid: eaf085dcd15f74ddda71f4e30fb6806d,
+    type: 3}
 --- !u!1 &1334714176
 GameObject:
   m_ObjectHideFlags: 0
