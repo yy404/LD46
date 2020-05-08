@@ -125,6 +125,7 @@ public class SpawnManager : MonoBehaviour
 
         Vector3 spawnPos = new Vector3(0.0f, 5.0f, 0.0f);
         Instantiate(powerup, spawnPos, powerup.gameObject.transform.rotation);
+        myAudioPlayer.playSoundPick();
     }
 
     public void ExpPowerup( float x, float y, float z)
