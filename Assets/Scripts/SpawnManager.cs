@@ -35,8 +35,9 @@ public class SpawnManager : MonoBehaviour
     private bool isGameActive;
     private int minRatio;
     private int score;
-    private float vitalityDuration = 10.0f;
+    private float vitalityDuration = 5.0f;
     private float vitalityTimer = 0.0f;
+    private string[] vitalityStrs = new string[6]{ "ZERO", "*", "**", "***", "****", "*****" };
 
     private AudioPlayer myAudioPlayer;
     private Renderer rend;
@@ -70,13 +71,17 @@ public class SpawnManager : MonoBehaviour
             else
             {
                 timer += Time.deltaTime;
-                vitalityTimer += Time.deltaTime;
-                rend.material.color = Color.Lerp(Color.red, Color.white, vitalityTimer/vitalityDuration);
+                if (timer > 10.0f)
+                {
+                    vitalityTimer += Time.deltaTime;
+                    rend.material.color = Color.Lerp(Color.red, Color.white, vitalityTimer/vitalityDuration);
+                }
             }
             scoreText.text = "Score: " + score;
             timerText.text = "Time: " + Mathf.FloorToInt(timer) + " s";
+            int vitalityVal = (int)vitalityDuration - Mathf.FloorToInt(vitalityTimer);
             ratioText.text = "Health: " + (100 - enemySum) + "%" + " > " + minRatio + "%"
-            + "\n" + "Vitality: " + (10 - Mathf.FloorToInt(vitalityTimer));
+            + "\n" + "Vitality: " + vitalityStrs[vitalityVal];
         }
 
     }
@@ -186,11 +191,10 @@ public class SpawnManager : MonoBehaviour
         // InvokeRepeating("SpawnPowerup", startDelay, powerupSpawnTime);
         Invoke("SpawnPowerup", startDelay);
 
-        Invoke("decEnemySpawnTime", startDelay + 30.0f);
-        Invoke("decEnemySpawnTime", startDelay + 60.0f);
-        Invoke("decEnemySpawnTime", startDelay + 90.0f);
-        Invoke("decEnemySpawnTime", startDelay + 120.0f);
-        Invoke("decEnemySpawnTime", startDelay + 150.0f);
+        for (int i = 30; i <= 180; i+=30)
+        {
+          Invoke("decEnemySpawnTime", startDelay + (float)i );
+        }
 
         vitalityTimer = 0.0f;
 
@@ -201,8 +205,9 @@ public class SpawnManager : MonoBehaviour
         timerText.text = "Time: " + timer + " s";
 
         minRatio = ratioInput;
+        int vitalityVal = (int)vitalityDuration - Mathf.FloorToInt(vitalityTimer);
         ratioText.text = "Health: " + (100 - enemySum) + "%" + " > " + minRatio + "%"
-        + "\n" + "Vitality: " + (10 - Mathf.FloorToInt(vitalityTimer));
+        + "\n" + "Vitality: " + vitalityStrs[vitalityVal];
 
         isGameActive = true;
         titleScreen.gameObject.SetActive(false);
