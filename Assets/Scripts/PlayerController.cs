@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody playerRb;
     private AudioPlayer myAudioPlayer;
     public ParticleSystem teleportParticle;
+    private SpawnManager TheSpawnManagerInstance;
 
     // Start is called before the first frame update
     void Start()
@@ -19,6 +20,10 @@ public class PlayerController : MonoBehaviour
 
         GameObject AudioPlayerObject = GameObject.Find("Audio Player");
         myAudioPlayer = AudioPlayerObject.GetComponent("AudioPlayer") as AudioPlayer;
+
+        GameObject TheSpawnManagerObject = GameObject.Find("Spawn Manager");
+        TheSpawnManagerInstance = TheSpawnManagerObject.GetComponent("SpawnManager") as SpawnManager;
+
     }
 
     // Update is called once per frame
@@ -138,8 +143,6 @@ public class PlayerController : MonoBehaviour
 
                 other.transform.position = thisPos;
                 other.gameObject.transform.parent = transform;
-                GameObject TheSpawnManagerObject = GameObject.Find("Spawn Manager");
-                SpawnManager TheSpawnManagerInstance = TheSpawnManagerObject.GetComponent("SpawnManager") as SpawnManager;
                 TheSpawnManagerInstance.SetSpawnPowerup();
 
             }
@@ -164,8 +167,6 @@ public class PlayerController : MonoBehaviour
                     float zPosTemp = Mathf.Floor(transform.position.z / 10);
                     float zPos = Mathf.Clamp(zPosTemp, 0.0f, 4.0f);
 
-                    GameObject TheSpawnManagerObject = GameObject.Find("Spawn Manager");
-                    SpawnManager TheSpawnManagerInstance = TheSpawnManagerObject.GetComponent("SpawnManager") as SpawnManager;
                     if ( null == TheSpawnManagerInstance.checkGroundInfo((int)zPos, (int)xPos) )
                     {
                         Vector3 thisPos = new Vector3(xPos*10+5, yPos, zPos*10+5);
