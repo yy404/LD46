@@ -29,11 +29,14 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        MovePlayer();
-        // MovePlayerByForce();
-        ConstrainPlayerPosition();
-        Release();
-        playerRb.velocity = Vector3.zero;
+        if (TheSpawnManagerInstance.checkGameActive())
+        {
+            MovePlayer();
+            // MovePlayerByForce();
+            ConstrainPlayerPosition();
+            Release();
+            playerRb.velocity = Vector3.zero;
+        }
     }
 
     void MovePlayerByForce()
