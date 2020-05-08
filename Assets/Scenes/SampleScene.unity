@@ -2208,7 +2208,7 @@ MonoBehaviour:
 
     YELLOW Capsules: passive mines to be deployed (by pressing "SPACE").
 
-    BLUE Ball: move yourself up/down/left/right (by pressing "W/S/A/D").'
+    BLUE Ball: move yourself (by pressing "up/down/left/right" or "W/S/A/D").'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2277,10 +2277,10 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: -663.0489, w: -39.37433}
   m_textInfo:
     textComponent: {fileID: 2003629748}
-    characterCount: 204
+    characterCount: 209
     spriteCount: 0
-    spaceCount: 28
-    wordCount: 36
+    spaceCount: 29
+    wordCount: 37
     linkCount: 0
     lineCount: 3
     pageCount: 1
