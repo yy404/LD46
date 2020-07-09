@@ -4,14 +4,18 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public ParticleSystem teleportParticle;
+    public GameObject powerup;
+
     private float speed = 50.0f;
     // private float force = 20.0f;
     private float zBound = 50;
     private float xBound = 200;
     private Rigidbody playerRb;
     private AudioPlayer myAudioPlayer;
-    public ParticleSystem teleportParticle;
     private SpawnManager TheSpawnManagerInstance;
+
+    private int capBufferVal = 4;
 
     // Start is called before the first frame update
     void Start()
@@ -36,6 +40,22 @@ public class PlayerController : MonoBehaviour
             ConstrainPlayerPosition();
             Release();
             playerRb.velocity = Vector3.zero;
+
+            // if ( (TheSpawnManagerInstance.getSizeCapQ() == 0) &&
+            //   ((transform.position.x > 10) || (transform.position.z > 10)) )
+            // {
+            //     // ResetPlayer();
+            // }
+
+            float xPosTemp = Mathf.Floor(transform.position.x / 10);
+            float xPos = Mathf.Clamp(xPosTemp, 0.0f, 19.0f);
+            float zPosTemp = Mathf.Floor(transform.position.z / 10);
+            float zPos = Mathf.Clamp(zPosTemp, 0.0f, 4.0f);
+            if (TheSpawnManagerInstance.checkHitByEnemy((int)zPos, (int)xPos))
+            {
+                ResetPlayer();
+            }
+
         }
     }
 
@@ -146,7 +166,7 @@ public class PlayerController : MonoBehaviour
 
                 other.transform.position = thisPos;
                 other.gameObject.transform.parent = transform;
-                TheSpawnManagerInstance.SetSpawnPowerup();
+                // TheSpawnManagerInstance.SetSpawnPowerup();
 
             }
 
@@ -159,6 +179,7 @@ public class PlayerController : MonoBehaviour
         {
             // print("space key was pressed");
 
+            // if ((transform.childCount > 0) && (TheSpawnManagerInstance.getSizeCapQ() < 4))
             if (transform.childCount > 0)
             {
                 GameObject powerup = transform.GetChild(0).gameObject;
@@ -170,18 +191,26 @@ public class PlayerController : MonoBehaviour
                     float zPosTemp = Mathf.Floor(transform.position.z / 10);
                     float zPos = Mathf.Clamp(zPosTemp, 0.0f, 4.0f);
 
-                    if ( null == TheSpawnManagerInstance.checkGroundInfo((int)zPos, (int)xPos) )
+                    if ( ( null == TheSpawnManagerInstance.checkGroundInfo((int)zPos, (int)xPos) )
+                        && (capBufferVal > 0) )
                     {
                         Vector3 thisPos = new Vector3(xPos*10+5, yPos, zPos*10+5);
                         powerup.transform.position = thisPos;
                         powerup.transform.SetParent(null);
                         TheSpawnManagerInstance.updateGroundInfo((int)zPos, (int)xPos, powerup);
 
-                        myAudioPlayer.playSoundPut();
+                        // myAudioPlayer.playSoundPut();
+                        TheSpawnManagerInstance.addCapToQ(powerup);
 
-                        ParticleSystem teleParticle1 = Instantiate(teleportParticle, transform.position, teleportParticle.gameObject.transform.rotation);
-                        transform.position = new Vector3(0, transform.position.y, 0);
-                        ParticleSystem teleParticle2 = Instantiate(teleportParticle, transform.position, teleportParticle.gameObject.transform.rotation);
+                        thisPos = new Vector3(transform.position.x, 10.0f, transform.position.z);
+                        GameObject newPowerup = Instantiate(powerup, thisPos, powerup.gameObject.transform.rotation);
+                        newPowerup.transform.parent = transform;
+
+                        // ParticleSystem teleParticle1 = Instantiate(teleportParticle, transform.position, teleportParticle.gameObject.transform.rotation);
+                        // transform.position = new Vector3(0, transform.position.y, 0);
+                        // ParticleSystem teleParticle2 = Instantiate(teleportParticle, transform.position, teleportParticle.gameObject.transform.rotation);
+
+                        updateCapBuffer(-1);
 
                         if (TheSpawnManagerInstance.checkGameActive())
                         {
@@ -199,6 +228,25 @@ public class PlayerController : MonoBehaviour
                 myAudioPlayer.playSoundError();
             }
         }
+    }
+
+    public void ResetPlayer()
+    {
+        ParticleSystem teleParticle1 = Instantiate(teleportParticle, transform.position, teleportParticle.gameObject.transform.rotation);
+        transform.position = new Vector3(0, transform.position.y, 0);
+        ParticleSystem teleParticle2 = Instantiate(teleportParticle, transform.position, teleportParticle.gameObject.transform.rotation);
+    }
+
+    public void updateCapBuffer(int delta)
+    {
+        capBufferVal += delta;
+        capBufferVal = Mathf.Clamp(capBufferVal, 0, 4);
+        // Debug.Log(capBufferVal);
+    }
+
+    public int getCapBufferVal()
+    {
+        return capBufferVal;
     }
 
 }

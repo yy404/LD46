@@ -4,14 +4,18 @@ using UnityEngine;
 
 public class MoveDown : MonoBehaviour
 {
-    // private Rigidbody objectRb;
-
     public ParticleSystem explosionParticle;
+    private SpawnManager TheSpawnManagerInstance;
+    private AudioPlayer myAudioPlayer;
 
     // Start is called before the first frame update
     void Start()
     {
-        // objectRb = GetComponent<Rigidbody>();
+        GameObject TheSpawnManagerObject = GameObject.Find("Spawn Manager");
+        TheSpawnManagerInstance = TheSpawnManagerObject.GetComponent("SpawnManager") as SpawnManager;
+
+        GameObject AudioPlayerObject = GameObject.Find("Audio Player");
+        myAudioPlayer = AudioPlayerObject.GetComponent("AudioPlayer") as AudioPlayer;
     }
 
     // Update is called once per frame
@@ -31,100 +35,52 @@ public class MoveDown : MonoBehaviour
             // float yPos = 0.0f;
             float zPosTemp = Mathf.Floor(transform.position.z / 10);
             float zPos = Mathf.Clamp(zPosTemp, 0.0f, 4.0f);
-            GameObject TheSpawnManagerObject = GameObject.Find("Spawn Manager");
-            SpawnManager TheSpawnManagerInstance = TheSpawnManagerObject.GetComponent("SpawnManager") as SpawnManager;
 
-            TheSpawnManagerInstance.updateGroundInfo((int)zPos, (int)xPos, null);
-
-            ParticleSystem expParticle = Instantiate(explosionParticle, transform.position, explosionParticle.gameObject.transform.rotation);
-            // expParticle.Play(); // enabled Play On Awake at prefab
-            // the stop action is set to be Destroy at prefab
-
-            GameObject AudioPlayerObject = GameObject.Find("Audio Player");
-            AudioPlayer myAudioPlayer = AudioPlayerObject.GetComponent("AudioPlayer") as AudioPlayer;
             myAudioPlayer.playSoundExplosion();
-
             Destroy(other.gameObject);
-            Destroy(gameObject);
-            TheSpawnManagerInstance.updateEnemySum(-1);
-            TheSpawnManagerInstance.addScore();
+
+            // updateGroundInfo?
             TheSpawnManagerInstance.refreshSpawnPowerup();
             TheSpawnManagerInstance.resetVitalityTimer();
 
+            tryKill( (int)zPos, (int)xPos );
+
             if (xPos > 0)
             {
-                GameObject thisObject = TheSpawnManagerInstance.checkGroundInfo((int)zPos, (int)xPos - 1 );
-                if (thisObject != null)
-                {
-                    if (thisObject.CompareTag("Enemy"))
-                    {
-                        expParticle = Instantiate(explosionParticle, thisObject.transform.position, explosionParticle.gameObject.transform.rotation);
-                        // expParticle.Play(); // enabled Play On Awake at prefab
-                        // the stop action is set to be Destroy at prefab
-
-                        TheSpawnManagerInstance.updateGroundInfo((int)zPos, (int)xPos - 1, null);
-                        Destroy(thisObject);
-                        TheSpawnManagerInstance.updateEnemySum(-1);
-                        TheSpawnManagerInstance.addScore();
-                    }
-                }
+                tryKill( (int)zPos, (int)xPos-1 );
             }
             if (xPos < 19.0f)
             {
-              GameObject thisObject = TheSpawnManagerInstance.checkGroundInfo((int)zPos, (int)xPos + 1 );
-              if (thisObject != null)
-              {
-                  if (thisObject.CompareTag("Enemy"))
-                  {
-                      expParticle = Instantiate(explosionParticle, thisObject.transform.position, explosionParticle.gameObject.transform.rotation);
-                      // expParticle.Play(); // enabled Play On Awake at prefab
-                      // the stop action is set to be Destroy at prefab
-
-                      TheSpawnManagerInstance.updateGroundInfo((int)zPos, (int)xPos + 1, null);
-                      Destroy(thisObject);
-                      TheSpawnManagerInstance.updateEnemySum(-1);
-                      TheSpawnManagerInstance.addScore();
-                  }
-              }
+                tryKill( (int)zPos, (int)xPos+1 );
             }
             if (zPos > 0)
             {
-              GameObject thisObject = TheSpawnManagerInstance.checkGroundInfo((int)zPos - 1, (int)xPos );
-              if (thisObject != null)
-              {
-                  if (thisObject.CompareTag("Enemy"))
-                  {
-                      expParticle = Instantiate(explosionParticle, thisObject.transform.position, explosionParticle.gameObject.transform.rotation);
-                      // expParticle.Play(); // enabled Play On Awake at prefab
-                      // the stop action is set to be Destroy at prefab
-
-                      TheSpawnManagerInstance.updateGroundInfo((int)zPos - 1, (int)xPos, null);
-                      Destroy(thisObject);
-                      TheSpawnManagerInstance.updateEnemySum(-1);
-                      TheSpawnManagerInstance.addScore();
-                  }
-              }
+                tryKill( (int)zPos-1, (int)xPos );
             }
             if (zPos < 4.0f)
             {
-              GameObject thisObject = TheSpawnManagerInstance.checkGroundInfo((int)zPos + 1, (int)xPos );
-              if (thisObject != null)
-              {
-                  if (thisObject.CompareTag("Enemy"))
-                  {
-                      expParticle = Instantiate(explosionParticle, thisObject.transform.position, explosionParticle.gameObject.transform.rotation);
-                      // expParticle.Play(); // enabled Play On Awake at prefab
-                      // the stop action is set to be Destroy at prefab
-
-                      TheSpawnManagerInstance.updateGroundInfo((int)zPos + 1, (int)xPos, null);
-                      Destroy(thisObject);
-                      TheSpawnManagerInstance.updateEnemySum(-1);
-                      TheSpawnManagerInstance.addScore();
-                  }
-              }
+                tryKill( (int)zPos+1, (int)xPos );
             }
 
         }
+    }
+
+    private bool tryKill(int zPos, int xPos)
+    {
+      GameObject thisObject = TheSpawnManagerInstance.checkGroundInfo(zPos, xPos);
+      if ((thisObject != null) && (thisObject.CompareTag("Enemy")))
+      {
+          ParticleSystem expParticle = Instantiate(explosionParticle, thisObject.transform.position, explosionParticle.gameObject.transform.rotation);
+          // expParticle.Play(); // enabled Play On Awake at prefab
+          // the stop action is set to be Destroy at prefab
+
+          TheSpawnManagerInstance.updateGroundInfo(zPos, xPos, null);
+          Destroy(thisObject);
+          TheSpawnManagerInstance.updateEnemySum(-1);
+          TheSpawnManagerInstance.addScore();
+          return true;
+      }
+      return false;
     }
 
 }
